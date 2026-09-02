@@ -1,0 +1,40 @@
+===============================================================================
+TEHOS - LICENC ÉS SZERZŐI JOGI NYILATKOZAT (LICENSE & COPYRIGHT NOTICE)
+===============================================================================
+
+Ez a projekt nyilvános forráskóddal érhető el, de az egyes összetevők
+felhasználására eltérő feltételek és jogok vonatkoznak.
+
+-------------------------------------------------------------------------------
+1. ALAPRENDSZER (KERNEL, BOOT, TEHLIBS MAPPA)
+-------------------------------------------------------------------------------
+A projekt alaprendszere, beleértve a főkönyvtárban lévő `kernel.cc` fájlt,
+a `boot/` és a `tehlibs/` mappák teljes tartalmát, az MIT Licenc feltételei
+szerint szabadon felhasználható, módosítható és terjeszthető.
+
+Copyright (c) 2026 TehSoft
+
+A fenti szerzői jogi nyilatkozatot és ezt az engedélyezési nyilatkozatot a
+szoftver minden másolatában fel kell tüntetni. A szoftvert "úgy, ahogy van"
+biztosítjuk, bármilyen kifejezett vagy hallgatólagos garancia nélkül.
+
+-------------------------------------------------------------------------------
+2. KÖTELEZŐ ÉRTESÍTÉSI ZÁRADÉK (SYSTEM/TEHLANG ÉS SYSTEM/TEHFS MAPPA)
+-------------------------------------------------------------------------------
+A `system/` mappán belül található `tehlang` (programozási nyelv) és `tehfs`
+(fájlrendszer) forráskódjai, belső logikai struktúrája és specifikációi
+a szerző kizárólagos szellemi tulajdonát képezik.
+
+Copyright (c) 2026 TehSoft. Minden jog fenntartva.
+
+Ezen összetevők (TehLang és TehFS) forráskódjának vagy részeinek bármilyen célú
+másolása, módosítása, saját projektbe való beépítése vagy terjesztése esetén
+a felhasználó KÖTELEZŐ jelleggel köteles a szerzőt (TehSoft) értesíteni
+az alábbi módon:
+
+- Egy nyilvános GitHub Issue (Hibajegy) indításával ebben a repóban,
+  vagy közvetlen üzenetben a szerző hivatalos GitHub profilján keresztül.
+
+Az értesítés elmulasztása a licencfeltételek megszegésének minősül, és a kód
+jogosulatlan, illegális felhasználását vonja maga után.
+===============================================================================
