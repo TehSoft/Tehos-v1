@@ -1,4 +1,4 @@
-#include <tehlang.hh>
+#include "tehlang.hh"
 
 namespace teh::lang {
     #pragma region változók

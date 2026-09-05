@@ -1,4 +1,4 @@
-/*#include <tehfs.hh>
+/*#include "tehfs.hh"
 
 namespace teh::fs {
     partition partitions[4];
