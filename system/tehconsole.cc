@@ -2,9 +2,10 @@
 
 command parancsok[] = {
     {"help", help, "Segitseg a parancsokhoz"},
+    {"echo", echo, "Szoveg kiirasa"},
     {"cls", cls, "A kepernyo torlese"},
-    {"exit", exit, "A rendszer leallitasa"},
-    {"tehlang", tehlang, "A TEHLANG nyelv futtatasa"}
+    {"tehlang", tehlang, "A TEHLANG nyelv futtatasa"},
+    {"exit", exit, "A rendszer leallitasa"}
 };
 
 

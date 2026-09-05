@@ -12,8 +12,9 @@ struct command {
     const char* help;
 };
 
-void tehlang();
 void help();
+void echo();
 void cls();
+void tehlang();
 void exit();
 #endif //TEHCONSOLE_HPP
