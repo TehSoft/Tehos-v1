@@ -14,12 +14,11 @@ namespace teh {
 
     //alap kezelés
     inline void kurzor_frissit() {
-        for (int i = 0; i < 80 * 25 * 2; i += 2) {
-            if (video_memoria[i] == '_')video_memoria[i] = ' ';
-        }
-        unsigned short pozicio = y * 80 + x;
-        video_memoria[pozicio * 2] = '_';
-        video_memoria[pozicio * 2 + 1] = char(alap_szin);
+        uint16 pozicio = y * 80 + x;
+        cpu::outb(0x3D4, 0x0F);
+        cpu::outb(0x3D5, (uint8)(pozicio & 0xFF));
+        cpu::outb(0x3D4, 0x0E);
+        cpu::outb(0x3D5, (uint8)((pozicio >> 8) & 0xFF));
     }
 
 
