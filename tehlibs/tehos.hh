@@ -92,24 +92,18 @@ inline char* trim_string(char* str) {
 
 inline bool strcmp(const char* a, const char* b, bool size_eq = true) {
     if (a == nullptr || b == nullptr) return a == b;
+    if (*a == '\0' || *b == '\0') return false;
 
     uint32 i = 0;
 
-    // Ha a hosszaknak egyezniük kell
-    if (size_eq) {
-        while (a[i] != '\0' && b[i] != '\0') {
-            if (a[i] != b[i]) return false;
-            i++;
-        }
-        return a[i] == b[i]; // Mindkettő elérte a végét?
-    }
-
-    // Ha elég, ha az egyik a másikkal kezdődik (prefix ellenőrzés)
     while (a[i] != '\0' && b[i] != '\0') {
         if (a[i] != b[i]) return false;
         i++;
     }
-    return true;
+    if(size_eq) {
+        return a[i] == b[i];
+    }
+    return (b[i] == '\0'); 
 }
 
 #endif

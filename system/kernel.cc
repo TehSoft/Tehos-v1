@@ -12,7 +12,12 @@ extern "C" void __cxa_guard_release(long long *g) { *g = 1; }
 
 
 void main(void) {
-    system("cls");
+    teh::clear();
+    teh::char_fill('=', szin::vilagos_cian);
+    teh::print("                           TEHOS operacios rendszer                            \n", szin::vilagos_zold);
+    teh::char_fill('=', szin::vilagos_cian);
+    teh::endl();
+    teh::endl();
     /*if(!disk::init()) {
         print("Disk initialization failed!", szin::voros);
         while(1);

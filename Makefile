@@ -43,7 +43,10 @@ tehfs.o:
 tehlang.o:
 	$(CC) $(CFLAGS) system/tehlang.cc -o tehlang.o
 
-myos.bin: boot.o kernel.o tehdisk.o tehmbr.o tehfs.o tehlang.o
+tehconsole.o:
+	$(CC) $(CFLAGS) system/tehconsole.cc -o tehconsole.o
+
+myos.bin: boot.o kernel.o tehdisk.o tehmbr.o tehfs.o tehlang.o tehconsole.o
 	$(LD) \
 	-m elf_x86_64 \
 	-T $(LINKER) \
@@ -53,7 +56,8 @@ myos.bin: boot.o kernel.o tehdisk.o tehmbr.o tehfs.o tehlang.o
 	tehdisk.o \
 	tehmbr.o \
 	tehfs.o \
-	tehlang.o
+	tehlang.o \
+	tehconsole.o
 
 myos.iso: myos.bin
 	mkdir -p isodir/boot/grub

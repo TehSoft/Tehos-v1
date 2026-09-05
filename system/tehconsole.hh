@@ -8,13 +8,14 @@
 // ezek a parancsok
 struct command {
     const char* call;
-    void (*func)();
+    void (*func)(char* parancs);
     const char* help;
 };
+void system(char* parancs);
 
-void help();
-void echo();
-void cls();
-void tehlang();
-void exit();
+void help(char* parancs);
+void echo(char* parancs);
+void cls(char* parancs);
+void tehlang(char* parancs);
+void exit(char* parancs);
 #endif //TEHCONSOLE_HPP
