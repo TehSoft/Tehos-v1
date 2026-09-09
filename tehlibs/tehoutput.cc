@@ -1,19 +1,13 @@
-#ifndef KEPERNYO_HPP
-#define KEPERNYO_HPP
-
-#include <tehos.hh>
+#include "tehio.hh"
 
 namespace teh {
-    namespace {
-        // 64 bites környezetben a volatile char* mutató már 8 bájton tárolódik
-        volatile char* video_memoria = (volatile char*)0xB8000;
-        int x = 0;
-        int y = 0;
-        szin alap_szin = szin::feher;
-    };
+    volatile char* video_memoria = (volatile char*)0xB8000;
+    int x = 0;
+    int y = 0;
+    szin alap_szin = szin::feher;
 
     //alap kezelés
-    inline void kurzor_frissit() {
+    void cursor_refresh() {
         uint16 pozicio = y * 80 + x;
         cpu::outb(0x3D4, 0x0F);
         cpu::outb(0x3D5, (uint8)(pozicio & 0xFF));
@@ -21,17 +15,22 @@ namespace teh {
         cpu::outb(0x3D5, (uint8)((pozicio >> 8) & 0xFF));
     }
 
+    void set_cursor(int nx, int ny) {
+        x = nx;
+        y = ny;
+        cursor_refresh();
+    }
 
-    inline void clear() {
+    void clear() {
         for (int i = 0; i < 80 * 25 * 2; i += 2) {
             video_memoria[i] = ' ';
             video_memoria[i + 1] = char(alap_szin);
         }
         x = 0; y = 0;
-        kurzor_frissit();
+        cursor_refresh();
     }
 
-    inline void scroll() {
+    void scroll() {
         for (int i = 0; i < 24 * 80 * 2; i++) {
             video_memoria[i] = video_memoria[i + 80 * 2];
         }
@@ -42,21 +41,21 @@ namespace teh {
         y = 24;
     }
 
-    inline void endl() {
+    void endl() {
         x = 0;
         y++;
         if (y >= 25) {
             scroll();
         }
-        kurzor_frissit();
+        cursor_refresh();
     }
 
-    inline void setcolor(szin SZIN) {
+    void setcolor(szin SZIN) {
         alap_szin = SZIN;
-        kurzor_frissit();
+        cursor_refresh();
     }
 
-    inline void backspace(bool leptetes = true) {
+    void backspace(bool leptetes) {
         if (leptetes) {
             if (x > 0) {
                 x--;
@@ -72,12 +71,12 @@ namespace teh {
         unsigned short pozicio = y * 80 + x;
         video_memoria[pozicio * 2] = ' ';
         video_memoria[pozicio * 2 + 1] = char(alap_szin);
-        kurzor_frissit();
+        cursor_refresh();
     }
 
 
     //valami kiírása a képernyőre
-    inline void print(char betu, szin SZIN = szin::alap) { // az összes kiírás alapja
+    void print(char betu, szin SZIN) { // az összes kiírás alapja
         if (SZIN == szin::alap) {
             SZIN = alap_szin;
         }
@@ -89,16 +88,21 @@ namespace teh {
             backspace();
             return;
         }
-
+        elif(betu == '\t') {
+            for (int i = 0; i < 4; i++) {
+                print(' ', SZIN);
+            }
+            return;
+        }
         int index = (y * 80 + x) * 2;
         video_memoria[index] = betu;
         video_memoria[index + 1] = char(SZIN);
         x++;
         if (x >= 80) { endl(); }
-        kurzor_frissit();
+        cursor_refresh();
     }
 
-    inline void print(const char* szoveg, szin SZIN = szin::alap) {
+    void print(const char* szoveg, szin SZIN ) {
         if (SZIN == szin::alap) {
             SZIN = alap_szin;
         }
@@ -108,7 +112,7 @@ namespace teh {
         }
     }
 
-    inline void char_fill(char betu, szin SZIN = szin::alap) {
+    void char_fill(char betu, szin SZIN) {
         if (SZIN == szin::alap) {
             SZIN = alap_szin;
         }
@@ -118,7 +122,7 @@ namespace teh {
         }
     }
 
-    inline void print(int64 szam, szin SZIN = szin::alap) {
+    void print(int64 szam, szin SZIN) {
         if (SZIN == szin::alap) {
             SZIN = alap_szin;
         }
@@ -148,6 +152,21 @@ namespace teh {
             print((char)('0' + szamjegyek[i]), SZIN);
         }
     }
-};
 
-#endif
+    void screen_init() {
+        cpu::outb(0x3D4, 0x0A);
+        uint8 val_0A = cpu::inb(0x3D5);
+        cpu::outb(0x3D5, (val_0A & 0xC0) | 13);
+
+        cpu::outb(0x3D4, 0x0B);
+        uint8 val_0B = cpu::inb(0x3D5);
+        cpu::outb(0x3D5, (val_0B & 0xE0) | 15);
+
+        teh::clear();
+        teh::char_fill('=', szin::vilagos_cian);
+        teh::print("                           TEHOS operacios rendszer                            \n", szin::vilagos_zold);
+        teh::char_fill('=', szin::vilagos_cian);
+        teh::endl();
+    }
+
+};

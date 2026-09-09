@@ -41,69 +41,37 @@ enum class szin : char {
 
 namespace cpu {
     inline void outb(uint16 port, uint8 adat) {
-        asm volatile("outb %0, %1" : : "a"(adat), "Nd"(port));
+        asm volatile("outb %0, %1" : : "a"(adat), "Nd"(port) : "memory");
     }
     inline uint8 inb(uint16 port) {
         uint8 adat;
-        asm volatile("inb %1, %0" : "=a"(adat) : "Nd"(port));
+        asm volatile("inb %1, %0" : "=a"(adat) : "Nd"(port) : "memory");
         return adat;
     }
 
     inline void outw(uint16 port, uint16 adat) {
-        asm volatile("outw %0, %1" : : "a"(adat), "Nd"(port));
+        asm volatile("outw %0, %1" : : "a"(adat), "Nd"(port) : "memory");
     }
     inline uint16 inw(uint16 port) {
         uint16 adat;
-        asm volatile("inw %1, %0" : "=a"(adat) : "Nd"(port));
+        asm volatile("inw %1, %0" : "=a"(adat) : "Nd"(port) : "memory");
         return adat;
     }
 
     inline void outd(uint16 port, uint32 adat) {
-        asm volatile("outl %0, %1" : : "a"(adat), "Nd"(port));
+        asm volatile("outl %0, %1" : : "a"(adat), "Nd"(port) : "memory");
     }
     inline uint32 ind(uint16 port) {
         uint32 adat;
-        asm volatile("inl %1, %0" : "=a"(adat) : "Nd"(port));
+        asm volatile("inl %1, %0" : "=a"(adat) : "Nd"(port) : "memory");
         return adat;
     }
 }
 
-inline char* trim_string(char* str) {
-    if (str == nullptr) {
-        return nullptr;
-    }
+void wait(uint32 ms);
+void timer_init();
 
-    while (*str == ' ') {
-        str++;
-    }
-
-    int size = 0;
-    while (str[size] != '\0') {
-        size++;
-    }
-
-    while (size > 0 && str[size - 1] == ' ') {
-        str[size - 1] = '\0';
-        size--;
-    }
-
-    return str;
-}
-
-inline bool strcmp(const char* a, const char* b, bool size_eq = true) {
-    if (a == nullptr || b == nullptr) return a == b;
-    if (*a == '\0' || *b == '\0') return false;
-
-    uint32 i = 0;
-
-    while (a[i] != '\0' && b[i] != '\0') {
-        if (a[i] != b[i]) return false;
-        i++;
-    }
-    if(size_eq) {
-        return a[i] == b[i];
-    }
-    return (b[i] == '\0'); 
-}
+char* trim_string(char* str);
+bool strcmp(const char* a, const char* b, bool size_eq = true);
 
 #endif

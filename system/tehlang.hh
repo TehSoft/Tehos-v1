@@ -2,7 +2,7 @@
 #define TEHLANG_HH
 
 #include <tehos.hh>
-#include <tehscreen.hh>
+#include <tehio.hh>
 
 namespace teh::lang {
     enum class deftype : uint8 {

@@ -18,7 +18,8 @@ CFLAGS = \
 -fno-rtti \
 -fno-stack-protector \
 -fcf-protection=none \
--O0 \
+-mno-red-zone \
+-O2 \
 -c \
 -Isystem\
 -Itehlibs
@@ -46,7 +47,22 @@ tehlang.o:
 tehconsole.o:
 	$(CC) $(CFLAGS) system/tehconsole.cc -o tehconsole.o
 
-myos.bin: boot.o kernel.o tehdisk.o tehmbr.o tehfs.o tehlang.o tehconsole.o
+tehstr.o:
+	$(CC) $(CFLAGS) tehlibs/tehstr.cc -o tehstr.o
+
+tehsound.o:
+	$(CC) $(CFLAGS) tehlibs/tehsound.cc -o tehsound.o
+
+tehwait.o:
+	$(CC) $(CFLAGS) tehlibs/tehwait.cc -o tehwait.o
+
+tehoutput.o:
+	$(CC) $(CFLAGS) tehlibs/tehoutput.cc -o tehoutput.o
+
+tehinput.o:
+	$(CC) $(CFLAGS) tehlibs/tehinput.cc -o tehinput.o
+
+myos.bin: boot.o kernel.o tehinput.o tehoutput.o tehdisk.o tehmbr.o tehfs.o tehlang.o tehconsole.o tehstr.o tehwait.o tehsound.o
 	$(LD) \
 	-m elf_x86_64 \
 	-T $(LINKER) \
@@ -57,7 +73,12 @@ myos.bin: boot.o kernel.o tehdisk.o tehmbr.o tehfs.o tehlang.o tehconsole.o
 	tehmbr.o \
 	tehfs.o \
 	tehlang.o \
-	tehconsole.o
+	tehconsole.o \
+	tehstr.o \
+	tehwait.o \
+	tehsound.o \
+	tehinput.o \
+	tehoutput.o
 
 myos.iso: myos.bin
 	mkdir -p isodir/boot/grub
@@ -71,9 +92,23 @@ myos.iso: myos.bin
 
 run: myos.iso
 	qemu-system-x86_64 \
-		-cdrom myos.iso \
-		-m 512M \
-		-drive file=disk.img,format=raw,index=0,media=disk
+        -audiodev alsa,id=snd0 \
+        -machine pc,pcspk-audiodev=snd0 \
+        -cdrom myos.iso \
+        -m 512M \
+        -drive file=disk.img,format=raw,index=0,media=disk
+
+log: myos.iso
+	qemu-system-x86_64 \
+        -audiodev alsa,id=snd0 \
+        -machine pc,pcspk-audiodev=snd0 \
+        -cdrom myos.iso \
+        -m 512M \
+        -drive file=disk.img,format=raw,index=0,media=disk \
+        -no-reboot \
+        -no-shutdown \
+        -D qemu.log \
+        -d guest_errors,cpu_reset
 
 clean:
 	rm -rf *.o *.bin *.iso isodir

@@ -1,14 +1,12 @@
-#ifndef BILLENTYUZET_HPP
-#define BILLENTYUZET_HPP
+#include "tehio.hh"
 
-#include <tehos.hh>
-
-namespace {
+namespace teh {
     bool shift_aktiv = false;
     bool altgr_aktiv = false;
     // Scancode (Set 1) átalakítása kisbetűs ASCII karakterré
-    inline char scancode_to_ascii(unsigned char scancode) {
+    char scancode_to_ascii(unsigned char scancode) {
         switch (scancode) {
+            //nemlétező karakter = 0
         case 0x1E: return 'a'; case 0x30: return 'b';
         case 0x2E: return 'c'; case 0x20: return 'd';
         case 0x12: return 'e'; case 0x21: return 'f';
@@ -22,7 +20,7 @@ namespace {
         case 0x16: return 'u'; case 0x2F: return 'v';
         case 0x11: return 'w'; case 0x2D: return 'x';
         case 0x2C: return 'y'; case 0x15: return 'z';
-        case 0x02: return shift_aktiv ? '\'' : altgr_aktiv ? '~' : '1'; case 0x03: return shift_aktiv ? '"' : altgr_aktiv ? 'ˇ' :'2';
+        case 0x02: return shift_aktiv ? '\'' : altgr_aktiv ? '~' : '1'; case 0x03: return shift_aktiv ? '"' : altgr_aktiv ? '0' : '2';
         case 0x04: return '3'; case 0x05: return '4';
         case 0x06: return '5'; case 0x07: return '6';
         case 0x08: return shift_aktiv ? '=' : altgr_aktiv ? '`' : '7'; case 0x09: return '8';
@@ -36,43 +34,42 @@ namespace {
         default: return 0;      // Ismeretlen gomb
         }
     }
-}
-// Polling függvény: 0-t ad vissza, ha nincs gombnyomás, vagy az ASCII kódot, ha van
-inline char karakter_olvas() {
-    // Ellenőrizzük a PS/2 kontroller állapotregiszterének (0x64) legalsó bitjét
-    if (cpu::inb(0x64) & 1) {
-        unsigned char scancode = cpu::inb(0x60); // Beolvassuk a leütött gombot
 
-        if(scancode == 0x2A || scancode == 0x36) { // Shift lenyomva
-            shift_aktiv = true;
-            return 0; // Nem adunk vissza karaktert
+    // Polling függvény: 0-t ad vissza, ha nincs gombnyomás, vagy az ASCII kódot, ha van
+    char karakter_olvas() {
+        // Ellenőrizzük a PS/2 kontroller állapotregiszterének (0x64) legalsó bitjét
+        if (cpu::inb(0x64) & 1) {
+            unsigned char scancode = cpu::inb(0x60); // Beolvassuk a leütött gombot
+
+            if (scancode == 0x2A || scancode == 0x36) { // Shift lenyomva
+                teh::shift_aktiv = true;
+                return 0; // Nem adunk vissza karaktert
+            }
+            else if (scancode == 0xAA || scancode == 0xB6) { // Shift felengedve
+                teh::shift_aktiv = false;
+                return 0; // Nem adunk vissza karaktert
+            }
+            else if (scancode == 0xE0) { // AltGr változása
+                teh::altgr_aktiv = !teh::altgr_aktiv;
+                return 0; // Nem adunk vissza karaktert
+            }
+            return teh::scancode_to_ascii(scancode);
         }
-        elif(scancode == 0xAA || scancode == 0xB6) { // Shift felengedve
-            shift_aktiv = false;
-            return 0; // Nem adunk vissza karaktert
-        }
-        elif(scancode == 0xE0) { // AltGr változása
-            altgr_aktiv = !altgr_aktiv;
-            return 0; // Nem adunk vissza karaktert
-        }
-        return scancode_to_ascii(scancode);
+        return 0; // Nincs új adat
     }
-    return 0; // Nincs új adat
-}
 
 
-namespace teh {
-    inline void input(char(&txt)[128]) {
+    void input(char(&txt)[128]) {
         int index = 0;
         while (1) {
             char c = karakter_olvas();
             if (c != 0) {
-                teh::kurzor_frissit();
+                teh::cursor_refresh();
                 if (c == '\n') {
                     txt[index] = '\0'; // Null terminálás a végén
                     break;
                 }
-                elif(c == '\b') {
+                else if (c == '\b') {
                     if (index > 0) {
                         index--;
                         txt[index] = '\0';
@@ -80,7 +77,7 @@ namespace teh {
                     }
                     else teh::backspace(false);
                 }
-                elif(index < 127) { // Biztonságos határ
+                else if (index < 127) { // Biztonságos határ
                     teh::print(c);
                     txt[index] = c;
                     index++;
@@ -89,5 +86,3 @@ namespace teh {
         }
     }
 }
-
-#endif

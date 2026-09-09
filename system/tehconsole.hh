@@ -2,8 +2,8 @@
 #define TEHCONSOLE_HPP
 
 #include <tehos.hh>
+#include <tehio.hh>
 #include <tehlang.hh>
-#include <tehkeyboard.hh>
 
 // ezek a parancsok
 struct command {
