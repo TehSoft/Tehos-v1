@@ -23,47 +23,47 @@ teh::sound play[8] = {
 
 void loading_screen() {
     teh::clear();
+    teh::setcolor(szin::voros);
+    teh::set_cursor(35, 7);
+    teh::print("\xb1\xb1      \xb1\xb1");
+    teh::set_cursor(35, 8);
+    teh::print("\xb1\xb1      \xb1\xb1");
+    teh::set_cursor(35, 9);
+    teh::print("\xb1\xb1      \xb1\xb1");
+    teh::set_cursor(35, 10);
+    teh::print("\xb1\xb1      \xb1\xb1");
+    teh::set_cursor(35, 11);
+    teh::print("\xb1\xb1\xb1\xb1\xb1\xb1\xb1\xb1\xb1\xb1");
+    teh::set_cursor(35, 12);
+    teh::print("\xb1\xb1\xb1\xb1\xb1\xb1\xb1\xb1\xb1\xb1");
+    teh::set_cursor(35, 13);
+    teh::print("  \xb1\xb1\xb1\xb1\xb1\xb1  ");
+    teh::set_cursor(35, 14);
+    teh::print("  \xb1\xb1\xb1\xb1\xb1\xb1  ");
+    teh::set_cursor(35, 15);
+    teh::print("    \xb1\xb1    ");
+    teh::set_cursor(35, 16);
+    teh::print("    \xb1\xb1    ");
+        for (int i = 0; i < 8; i++) {
+        teh::playsound(play[i]);
+    }
+    teh::clear();
+    teh::setcolor(szin::feher);
     teh::set_cursor(46, 18);
     teh::print(']');
     teh::set_cursor(34, 18);
     teh::print('[');
 
     for(uint8 i = 0; i < 10; i++) {
-        teh::print('#');
+        teh::print((char)0xDB);
         wait(100);
     }
-
-    /*teh::setcolor(szin::vilagos_piros);
-    teh::set_cursor(35, 7);
-    teh::print("██      ██");
-    teh::set_cursor(36, 7);
-    teh::print("██      ██");
-    teh::set_cursor(37, 7);
-    teh::print("██      ██");
-    teh::set_cursor(38, 7);
-    teh::print("██      ██");
-    teh::set_cursor(39, 7);
-    teh::print("██████████");
-    teh::set_cursor(40, 7);
-    teh::print("██████████");
-    teh::set_cursor(41, 7);
-    teh::print("  ██████  ");
-    teh::set_cursor(42, 7);
-    teh::print("  ██████  ");
-    teh::set_cursor(43, 7);
-    teh::print("    ██    ");
-    teh::set_cursor(44, 7);
-    teh::print("    ██    ");
-    wait(1000);*/
 }
 
 void kernel_init() {
     timer_init();
     loading_screen();
     teh::screen_init();
-    for (int i = 0; i < 8; i++) {
-        teh::playsound(play[i]);
-    }
     /*if(!disk::init()) {
         print("Disk initialization failed!", szin::voros);
         while(1);
