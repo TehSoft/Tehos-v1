@@ -26,7 +26,7 @@ p2_table:
 
 
 stack_bottom:
-    resb 16384
+    resb 65536
 
 stack_top:
 

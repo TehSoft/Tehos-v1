@@ -3,6 +3,7 @@
 namespace teh::lang {
     #pragma region változók
     defined vals[26] = { 0 };
+    volatile int64 test_vals[26] = { 0 };
 
     defined var(char* code) { // kezelni kell minden lehetőséget
         if (code == nullptr) {
@@ -54,10 +55,13 @@ namespace teh::lang {
         }
         else code ++;
         code = trim_string(code);
-        vals[name - 'a'] = var(code);
+        defined temp = var(code);
+        vals[name - 'a'].value = temp.value;
+        vals[name - 'a'].type = temp.type;
 
     }
     #pragma endregion
+
     void fprint(char* code) {
         if (code == nullptr) {
             return;
@@ -79,17 +83,17 @@ namespace teh::lang {
         }
     }
     void line_compiler(char* code) {
-        if (code == nullptr) {
+        if (code == nullptr)
             return;
-        }
+
         code = trim_string(code);
+
         if (strcmp(code, "print", false)) {
             fprint(code + 5);
         }
         else if (strcmp(code, "def", false)) {
             fdef(code + 3);
         }
-        return;
     }
     void inline_tehlang(char* code) {
         if (code == nullptr) {
