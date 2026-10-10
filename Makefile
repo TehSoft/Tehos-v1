@@ -11,7 +11,7 @@ ASFLAGS = -f elf64
 
 CFLAGS = \
 -m64 \
--std=c++11 \
+-std=c++17 \
 -ffreestanding \
 -fno-builtin \
 -fno-exceptions \
@@ -24,61 +24,49 @@ CFLAGS = \
 -Isystem\
 -Itehlibs
 
+OBJ_DIR = objs
+
 all: myos.iso
 
-boot.o:
-	$(AS) $(ASFLAGS) $(BOOT) -o boot.o
+SRCS := $(wildcard system/*.cc) \
+        $(wildcard system/apps/*.cc) \
+        $(wildcard tehlibs/*.cc)
 
-kernel.o:
-	$(CC) $(CFLAGS) system/kernel.cc -o kernel.o
+OBJS := $(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.cc=.o)))
 
-tehdisk.o:
-	$(CC) $(CFLAGS) tehlibs/tehdisk.cc -o tehdisk.o
 
-tehmbr.o:
-	$(CC) $(CFLAGS) tehlibs/tehmbr.cc -o tehmbr.o
+$(OBJ_DIR)/boot.o: $(BOOT)
+	@mkdir -p $(OBJ_DIR)
+	$(AS) $(ASFLAGS) $< -o $@
 
-tehfs.o:
-	$(CC) $(CFLAGS) system/tehfs.cc -o tehfs.o
+$(OBJ_DIR)/%.o: system/%.cc
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) $< -o $@
 
-tehlang.o:
-	$(CC) $(CFLAGS) system/tehlang.cc -o tehlang.o
+$(OBJ_DIR)/%.o: tehlibs/%.cc
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) $< -o $@
 
-tehconsole.o:
-	$(CC) $(CFLAGS) system/tehconsole.cc -o tehconsole.o
+$(OBJ_DIR)/%.o: system/apps/%.cc
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) $< -o $@
 
-tehstr.o:
-	$(CC) $(CFLAGS) tehlibs/tehstr.cc -o tehstr.o
+appcollector.ii:
+	@echo "// Automatikusan generalt .ii fejlec - NE MODOSITSD!" > system/app_includes.ii
+	@for file in system/apps/*.hh; do \
+		if [ -f "$$file" ]; then \
+			basename=$$(basename $$file); \
+			echo "#include \"apps/$$basename\"" >> system/appcollector.ii; \
+		fi \
+	done
 
-tehsound.o:
-	$(CC) $(CFLAGS) tehlibs/tehsound.cc -o tehsound.o
-
-tehwait.o:
-	$(CC) $(CFLAGS) tehlibs/tehwait.cc -o tehwait.o
-
-tehoutput.o:
-	$(CC) $(CFLAGS) tehlibs/tehoutput.cc -o tehoutput.o
-
-tehinput.o:
-	$(CC) $(CFLAGS) tehlibs/tehinput.cc -o tehinput.o
-
-myos.bin: boot.o kernel.o tehinput.o tehoutput.o tehdisk.o tehmbr.o tehfs.o tehlang.o tehconsole.o tehstr.o tehwait.o tehsound.o
+myos.bin: appcollector.ii $(OBJ_DIR)/boot.o $(OBJS)
 	$(LD) \
 	-m elf_x86_64 \
 	-T $(LINKER) \
 	-o myos.bin \
-	boot.o \
-	kernel.o \
-	tehdisk.o \
-	tehmbr.o \
-	tehfs.o \
-	tehlang.o \
-	tehconsole.o \
-	tehstr.o \
-	tehwait.o \
-	tehsound.o \
-	tehinput.o \
-	tehoutput.o
+	$(OBJ_DIR)/boot.o \
+	$(OBJS)
 
 myos.iso: myos.bin
 	mkdir -p isodir/boot/grub
@@ -87,7 +75,7 @@ myos.iso: myos.bin
 	grub-mkrescue \
 	-o myos.iso \
 	isodir
-	rm -f *.o *.bin
+	rm -f myos.bin
 	rm -rf isodir
 
 run: myos.iso
@@ -97,6 +85,7 @@ run: myos.iso
         -cdrom myos.iso \
         -m 512M \
         -drive file=disk.img,format=raw,index=0,media=disk
+	rm -rf $(OBJ_DIR)
 
 log: myos.iso
 	qemu-system-x86_64 \
@@ -111,7 +100,7 @@ log: myos.iso
         -d guest_errors,cpu_reset
 
 clean:
-	rm -rf *.o *.bin *.iso isodir
+	rm -rf $(OBJ_DIR) *.iso
 
 save: myos.iso
 	sudo dd if=myos.iso of=$(USB) bs=4M status=progress oflag=sync

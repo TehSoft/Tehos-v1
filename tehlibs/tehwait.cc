@@ -1,4 +1,4 @@
-#include "tehos.hh"
+#include "tehmain"
 
 // Globális inicializáló: a kernel_init()-ben EGYSZER meg kell hívni a dallam előtt!
 void timer_init() {
@@ -32,7 +32,7 @@ void wait_one_overflow() {
 }
 
 // A valódi wait függvény, ami milliszekundumot (ms) vár
-void wait(uint32 ms) {
+namespace teh { void wait(uint32 ms) {
     if (ms == 0) return;
 
     // A PIT maximális periódusa (65535) az alapórajelből adódóan 
@@ -50,4 +50,4 @@ void wait(uint32 ms) {
     for (volatile uint64 i = 0; i < remainder_ms * 400000; i++) {
         __asm__ volatile("nop");
     }
-}
+}}

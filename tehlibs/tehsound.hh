@@ -1,6 +1,6 @@
 #ifndef TEHSOUND_HH
 #define TEHSOUND_HH
-#include <tehos.hh>
+#include <tehmain>
 
 namespace teh{
     struct sound {

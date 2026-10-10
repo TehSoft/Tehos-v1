@@ -1,7 +1,10 @@
-/*#ifndef TEHDISK_HPP
-#define TEHDISK_HPP
+#ifndef TEHDISK_HH
+#define TEHDISK_HH
 
-#include <tehos.hh>
+#include <tehmain>
+#pragma region temp
+#include <tehio>
+#pragma endregion
 
 namespace disk {
     struct device_info {
@@ -25,4 +28,4 @@ namespace disk {
     bool write(uint64 offset, const block& buffer);
 }
 
-#endif*/
+#endif

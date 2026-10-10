@@ -34,14 +34,14 @@ namespace teh{
 
         // 2. Közvetlenül átadjuk a milliszekundumot a wait-nek!
         // Nem kell osztani, nem kell darabolni, a wait(ms) elintézi.
-        wait(duration_ms);
+        teh::wait(duration_ms);
 
         // 3. Hang leállítása
         endsound();
         
         // 4. Egy pici (pl. 20 ms) szünet a hangok között, 
         // hogy ne folyjanak össze az egymást követő azonos frekvenciák
-        wait(20); 
+        teh::wait(20); 
     }
 
     void playsound(sound s) {

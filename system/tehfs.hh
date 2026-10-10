@@ -1,49 +1,53 @@
-/*#ifndef TEHFS_HPP
-#define TEHFS_HPP
+#ifndef TEHFS_HH
+#define TEHFS_HH
 
-#include <tehos.hh>
+#include <tehmain>
 #include <tehdisk.hh>
 #include <tehmbr.hh>
 
-struct partition {
-    uint32 start_lba;
-    uint32 sector_count;
-    superblock sb;
-};
-
-struct __attribute__((packed)) superblock {
-    uint32 magic;
-    uint32 version;
-    uint32 firstfree;
-    uint32 blocksize;
-};
-
-constexpr uint32 TEHFS_MAGIC = 0x54454846;
-constexpr uint32 sbsize = sizeof(superblock);
-
-enum class filetype : uint8 {
-    unused,
-    unknown,
-    text,
-    uint64num,
-    int64num,
-    commandscript,
-    tehlang,            //todo olyan tehlang, amit lehet szerkeszteni
-    runable_tehlang     //todo olyan tehlang, amit már nem lehet szerkeszteni, csak futtatni
-};
-
-struct __attribute__((packed)) fileheader {
-    filetype type;
-    uint32 size;
-    char name[64];
-};
-
-constexpr uint32 header_size = sizeof(fileheader);
-
 namespace teh::fs {
-    //todo nincs még kész
-    uint8 init();
-    bool write();
-    bool read();
+
+    constexpr uint32 BLOCK_SIZE = 4096;
+
+    constexpr uint32 SECTORS_PER_BLOCK =
+        BLOCK_SIZE / disk::blocksize;
+
+    constexpr uint32 TEHFS_MAGIC = 0x54454846;
+    constexpr uint32 TEHFS_VERSION = 1;
+
+    struct __attribute__((packed)) superblock {
+        uint32 magic;
+        uint32 version;
+        uint32 block_size;
+        uint32 block_count;
+
+        uint32 bitmap_start;
+        uint32 bitmap_blocks;
+
+        uint32 inode_bitmap_start;
+        uint32 inode_bitmap_blocks;
+
+        uint32 inode_start;
+        uint32 inode_count;
+
+        uint32 data_start;
+
+        uint32 root_inode;
+    };
+
+    struct __attribute__((packed)) partition {
+        uint32 start_lba;
+        uint32 sector_count;
+        superblock sb;
+    };
+
+    constexpr uint32 MAX_PARTITIONS = 4;
+
+    extern partition partitions[MAX_PARTITIONS];
+    extern uint8 partition_count;
+
+    bool init();
+
 }
-#endif*/
+
+#endif // TEHFS_HH

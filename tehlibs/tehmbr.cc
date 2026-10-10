@@ -1,4 +1,4 @@
-/*#include <tehmbr.hh>
+#include "tehmbr.hh"
 
 namespace mbr {
 
@@ -39,12 +39,11 @@ namespace mbr {
         }
 
         // MBR signature: 0x55AA
-        if (block.data[510] != 0x55 ||
-            block.data[511] != 0xAA) {
+        if ((block.data[510] != 0x55) || (block.data[511] != 0xAA)) {
             return false;
         }
 
         return true;
     }
 
-}*/
+}

@@ -1,9 +1,10 @@
-#ifndef TEHCONSOLE_HPP
-#define TEHCONSOLE_HPP
+#ifndef TEHCONSOLE_HH
+#define TEHCONSOLE_HH
 
-#include <tehos.hh>
-#include <tehio.hh>
+#include <tehmain>
+#include <tehio>
 #include <tehlang.hh>
+#include <tehappman.hh>
 
 // ezek a parancsok
 struct command {
@@ -12,10 +13,14 @@ struct command {
     const char* help;
 };
 void system(char* parancs);
-
-void help(char* parancs);
-void echo(char* parancs);
-void cls(char* parancs);
-void tehlang(char* parancs);
-void exit(char* parancs);
-#endif //TEHCONSOLE_HPP
+namespace teh::console {
+    void cmd(char* parancs);
+    void help(char* parancs);
+    void testchars(char* parancs);
+    void openapp(char* parancs);
+    void echo(char* parancs);
+    void cls(char* parancs);
+    //void tehlang(char* parancs);
+    void exit(char* parancs);
+};
+#endif //TEHCONSOLE_HH

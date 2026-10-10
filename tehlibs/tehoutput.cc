@@ -1,4 +1,4 @@
-#include "tehio.hh"
+#include "tehio"
 
 namespace teh {
     volatile char* video_memoria = (volatile char*)0xB8000;

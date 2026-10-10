@@ -1,6 +1,7 @@
-/*#ifndef MBR_HPP
-#define MBR_HPP
+#ifndef MBR_HH
+#define MBR_HH
 
+#include <tehmain>
 #include <tehdisk.hh>
 
 namespace mbr {
@@ -20,4 +21,4 @@ namespace mbr {
     bool read(table& result);
 }
 
-#endif*/
+#endif

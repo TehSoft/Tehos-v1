@@ -1,4 +1,10 @@
-#include "tehos.hh"
+#include "tehmain"
+
+uint32 strlen(const char* str) {
+    int i = 0;
+    while(*(str + i) != '\0') i++;
+    return i;
+}
 
 bool strcmp(const char* a, const char* b, bool size_eq) {
     if (a == nullptr || b == nullptr) return a == b;

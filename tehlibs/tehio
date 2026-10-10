@@ -1,6 +1,6 @@
-#ifndef TEHIO_HH
-#define TEHIO_HH
-#include <tehos.hh>
+#ifndef TEHIO
+#define TEHIO
+#include <tehmain>
 
 namespace teh {
     void cursor_refresh();
@@ -18,6 +18,18 @@ namespace teh {
     char scancode_to_ascii(unsigned char scancode);
     char karakter_olvas();
     void input(char(&txt)[128]);
+
+
+    class tehout {
+        public:
+        template<typename T>
+        tehout &operator<<(T coutable) {
+            print(coutable);
+            return *this;
+
+        }
+    };
+    inline tehout cout;
 }
 
-#endif //TEHIO_HH
+#endif //TEHIO

@@ -1,8 +1,8 @@
 #ifndef TEHLANG_HH
 #define TEHLANG_HH
 
-#include <tehos.hh>
-#include <tehio.hh>
+#include <tehmain>
+#include <tehio>
 
 namespace teh::lang {
     enum class deftype : uint8 {

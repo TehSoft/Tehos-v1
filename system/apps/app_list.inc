@@ -1,0 +1,1 @@
+APP_DEF(tote, "TeOs Text Editor")

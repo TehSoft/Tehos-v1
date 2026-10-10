@@ -1,5 +1,5 @@
-/*#include <tehdisk.hh>
-#include <tehos.hh>
+#include "tehdisk.hh"
+
 
 namespace disk {
     void ata_string(uint16 data[256], char* buffer, uint32 size, uint32 point) {
@@ -22,7 +22,7 @@ namespace disk {
     base + 5 → LBA HIGH
     base + 6 → DRIVE / LBA
     base + 7 → STATUS / COMMAND
-    *//*
+    */
     bool initialized = false;
     device_info device;
     uint16 initdata[256];
@@ -87,10 +87,17 @@ namespace disk {
         cpu::outb(ATA_PRIMARY + 7, 0x24);
 
         uint8 status;
-        do{
+        uint32 timeout = 1000000;
+
+        do {
             status = cpu::inb(ATA_PRIMARY + 7);
-        }
-        while (status & 0b10000000);
+        
+            if (--timeout == 0) {
+                teh::print("ATA timeout!\n", szin::voros);
+                return false;
+            }
+        
+        } while (status & 0b10000000);
 
         if(status & 0b00000001) {
             return false;
@@ -160,4 +167,4 @@ namespace disk {
         return true;
     }
     #pragma endregion
-}*/
+}

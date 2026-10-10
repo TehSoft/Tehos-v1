@@ -1,8 +1,9 @@
-#include <tehos.hh>
-#include <tehio.hh>
+#include <tehmain>
+#include <tehio>
 #include <tehconsole.hh>
 #include <tehdisk.hh>
 #include <tehsound.hh>
+#include <tehfs.hh>
 
 extern "C" {
     void main(void);
@@ -44,7 +45,7 @@ void loading_screen() {
     teh::print("    \xb1\xb1    ");
     teh::set_cursor(35, 16);
     teh::print("    \xb1\xb1    ");
-        for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
         teh::playsound(play[i]);
     }
     teh::clear();
@@ -56,24 +57,30 @@ void loading_screen() {
 
     for(uint8 i = 0; i < 10; i++) {
         teh::print((char)0xDB);
-        wait(100);
+        teh::wait(100);
     }
 }
 
 void kernel_init() {
     timer_init();
-    loading_screen();
     teh::screen_init();
-    /*if(!disk::init()) {
-        print("Disk initialization failed!", szin::voros);
-        while(1);
-    }*/
+    loading_screen();
     teh::setcolor(szin::sarga);
+    /*if(teh::fs::init()) {
+        teh::print("TEHFS inicializálva!\n", szin::vilagos_zold);
+    } else {
+        teh::print("TEHFS inicializálása sikertelen!\n", szin::voros);
+    }*/
 }
 
 void main(void) {
+    teh::clear();
     kernel_init();
     char txt[128];
+    txt[0] = 'c';
+    txt[1] = 'l';
+    txt[2] = 's';
+    system(txt);
     while (1) {
         teh::print(">", szin::vilagos_szurke);
         teh::input(txt);
