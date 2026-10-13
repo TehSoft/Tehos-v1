@@ -51,16 +51,7 @@ $(OBJ_DIR)/%.o: system/apps/%.cc
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) $< -o $@
 
-appcollector.ii:
-	@echo "// Automatikusan generalt .ii fejlec - NE MODOSITSD!" > system/app_includes.ii
-	@for file in system/apps/*.hh; do \
-		if [ -f "$$file" ]; then \
-			basename=$$(basename $$file); \
-			echo "#include \"apps/$$basename\"" >> system/appcollector.ii; \
-		fi \
-	done
-
-myos.bin: appcollector.ii $(OBJ_DIR)/boot.o $(OBJS)
+myos.bin: $(OBJ_DIR)/boot.o $(OBJS)
 	$(LD) \
 	-m elf_x86_64 \
 	-T $(LINKER) \

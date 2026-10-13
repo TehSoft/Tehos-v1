@@ -4,7 +4,7 @@ namespace teh {
     command parancsok[] = {
         { "help", teh::console::help, "Segitseg a parancsokhoz" },
         { "testchars", teh::console::testchars, "Temp!" },
-        { "openapp", teh::console::openapp, "Alk. megnyitasa" },
+        { "runapp", teh::console::openapp, "Alk. megnyitasa" },
         { "echo", teh::console::echo, "Szoveg kiirasa" },
         { "cls", teh::console::cls, "A kepernyo torlese" },
         //{ "tehlang", teh::console::tehlang, "A TEHLANG nyelv futtatasa" },
