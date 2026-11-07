@@ -6,7 +6,6 @@
 #include <tehfs.hh>
 
 extern "C" {
-    void main(void);
     int __cxa_guard_acquire(long long* g) { return !*g; }
     void __cxa_guard_release(long long* g) { *g = 1; }
 }
@@ -73,7 +72,7 @@ void kernel_init() {
     }*/
 }
 
-void main(void) {
+extern "C" void main(void) {
     teh::clear();
     kernel_init();
     char txt[128];
@@ -81,7 +80,8 @@ void main(void) {
     txt[1] = 'l';
     txt[2] = 's';
     system(txt);
-    while (1) {
+    teh::playsound(961, 40);
+    while (1) { // meta = 0x37
         teh::print(">", szin::vilagos_szurke);
         teh::input(txt);
         teh::endl();

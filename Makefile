@@ -77,6 +77,7 @@ run: myos.iso
         -m 512M \
         -drive file=disk.img,format=raw,index=0,media=disk
 	rm -rf $(OBJ_DIR)
+	rm -rf *.iso
 
 log: myos.iso
 	qemu-system-x86_64 \

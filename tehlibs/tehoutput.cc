@@ -34,17 +34,17 @@ namespace teh {
         for (int i = 0; i < 24 * 80 * 2; i++) {
             video_memoria[i] = video_memoria[i + 80 * 2];
         }
-        for (int i = 24 * 80 * 2; i < 25 * 80 * 2; i += 2) {
+        for (int i = 23 * 80 * 2; i < 24 * 80 * 2; i += 2) {
             video_memoria[i] = ' ';
             video_memoria[i + 1] = char(alap_szin);
         }
-        y = 24;
+        y = 23;
     }
 
     void endl() {
         x = 0;
         y++;
-        if (y >= 25) {
+        if (y >= 24) {
             scroll();
         }
         cursor_refresh();
@@ -102,7 +102,7 @@ namespace teh {
         cursor_refresh();
     }
 
-    void print(const char* szoveg, szin SZIN ) {
+    void print(const char* szoveg, szin SZIN) {
         if (SZIN == szin::alap) {
             SZIN = alap_szin;
         }
@@ -153,6 +153,49 @@ namespace teh {
         }
     }
 
+    void print_no_scroll(const char* szoveg, szin SZIN) {
+        if (SZIN == szin::alap) {
+            SZIN = alap_szin;
+        }
+        for (int i = 0; szoveg[i] != '\0'; i++) {
+            if (SZIN == szin::alap) {
+                SZIN = alap_szin;
+            }
+            if (szoveg[i] == '\n') {
+                if (x >= 80) {
+                    x = 0;
+                    y++;
+                    if (y >= 25) {
+                        y = 24;
+                    }
+                }
+                return;
+            }
+            elif(szoveg[i] == '\b') {
+                backspace();
+                return;
+            }
+            elif(szoveg[i] == '\t') {
+                for (int i = 0; i < 4; i++) {
+                    print(' ', SZIN);
+                }
+                return;
+            }
+            int index = (y * 80 + x) * 2;
+            video_memoria[index] = szoveg[i];
+            video_memoria[index + 1] = char(SZIN);
+            x++;
+            if (x >= 80) {
+                x = 0;
+                y++;
+                if (y >= 25) {
+                    y = 24;
+                }
+            }
+            cursor_refresh();
+        }
+    }
+
     void screen_init() {
         cpu::outb(0x3D4, 0x0A);
         uint8 val_0A = cpu::inb(0x3D5);
@@ -161,12 +204,6 @@ namespace teh {
         cpu::outb(0x3D4, 0x0B);
         uint8 val_0B = cpu::inb(0x3D5);
         cpu::outb(0x3D5, (val_0B & 0xE0) | 15);
-
-        teh::clear();
-        teh::char_fill('=', szin::vilagos_cian);
-        teh::print("                           TEHOS operacios rendszer                            \n", szin::vilagos_zold);
-        teh::char_fill('=', szin::vilagos_cian);
-        teh::endl();
     }
 
 };
