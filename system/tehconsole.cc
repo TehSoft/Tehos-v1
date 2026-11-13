@@ -152,7 +152,6 @@ namespace teh {
         }
     }
 };
-};
 void system(char* parancs) {
     parancs = trim_string(parancs);
     char* line_start = parancs;
