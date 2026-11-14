@@ -21,7 +21,7 @@ namespace teh {
 
 
     class tehout {
-        public:
+    public:
         template<typename T>
         tehout &operator<<(T coutable) {
             print(coutable);

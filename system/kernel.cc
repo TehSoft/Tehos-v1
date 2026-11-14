@@ -1,16 +1,14 @@
 #include <tehmain>
 #include <tehio>
 #include <tehconsole.hh>
-#include <tehdisk.hh>
 #include <tehsound.hh>
-#include <tehfs.hh>
 
 extern "C" {
     int __cxa_guard_acquire(long long* g) { return !*g; }
     void __cxa_guard_release(long long* g) { *g = 1; }
 }
 
-teh::sound play[8] = {
+constexpr teh::sound play[8] = {
     { 330, 250 },
     { 294, 250 },
     { 392, 250 },

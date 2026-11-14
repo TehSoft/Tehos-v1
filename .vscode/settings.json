@@ -2,6 +2,8 @@
     "gitdoc.enabled": true,
     "gitdoc.autoPush": "onCommit",
     "C_Cpp.formatting": "vcFormat",
+    "editor.copyWithSyntaxHighlighting": false,
+    "editor.formatOnSave": false,
     "C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "sameLine",
     "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "sameLine",
     "C_Cpp.vcFormat.newLine.beforeOpenBrace.lambda": "sameLine",
